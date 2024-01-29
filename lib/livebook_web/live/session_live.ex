@@ -327,6 +327,12 @@ defmodule LivebookWeb.SessionLive do
                   </button>
                 </.menu_item>
                 <.menu_item>
+                  <button role="menuitem" phx-click="open_editor">
+                    <.remix_icon icon="quill-pen" />
+                    <span>Open in external editor</span>
+                  </button>
+                </.menu_item>
+                <.menu_item>
                   <a role="menuitem" href={live_dashboard_process_path(@session.pid)} target="_blank">
                     <.remix_icon icon="dashboard-2-line" />
                     <span>See on Dashboard</span>
@@ -1525,6 +1531,12 @@ defmodule LivebookWeb.SessionLive do
     data = Session.get_data(pid)
     notebook = Notebook.forked(data.notebook)
     {:noreply, create_session(socket, notebook: notebook, files_source: {:dir, files_dir})}
+  end
+
+  def handle_event("open_editor", %{}, socket) do
+    session = socket.assigns.session
+    System.cmd(System.get_env("EDITOR", "emacsclient"), [session.file.path])
+    {:noreply, socket}
   end
 
   def handle_event("close_session", %{}, socket) do
