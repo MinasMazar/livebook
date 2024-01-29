@@ -90,6 +90,7 @@ defmodule LivebookWeb.SessionLive do
            allowed_uri_schemes: Livebook.Config.allowed_uri_schemes(),
            starred_files: Livebook.NotebookManager.starred_notebooks() |> starred_files()
          )
+	 |> assign(:debug, nil)
          |> assign_private(data: data)
          |> prune_outputs()
          |> prune_cell_sources()}
@@ -369,6 +370,10 @@ defmodule LivebookWeb.SessionLive do
                   </.link>
                 </.menu_item>
               </.menu>
+
+              <div :if={@debug} class="p-10 m-10">
+		DEBUG: <%= inspect @debug %>
+	      </div>
 
               <div class="px-[1px]">
                 <%= cond do %>
